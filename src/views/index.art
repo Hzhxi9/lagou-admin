@@ -212,11 +212,21 @@
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
       <!-- Content Header (Page header) -->
-      
+      <section class="content-header">
+        <h1>
+          简单表格
+          <small>预览简单表格</small>
+        </h1>
+        <ol class="breadcrumb">
+          <li><a href="#"><i class="fa fa-dashboard"></i> 首页</a></li>
+          <li><a href="#">表格</a></li>
+          <li class="active">简单表格</li>
+        </ol>
+      </section>
   
       <!-- Main content -->
       <section class="content" id="content">
-        {{subRouter}}
+        
       </section>
       <!-- /.content -->
     </div>
