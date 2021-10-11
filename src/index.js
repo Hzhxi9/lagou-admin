@@ -1,5 +1,7 @@
-import rootTemplate from './views/index.art';
+import router from './routes';
 
-const html = rootTemplate()
+const hash = location.hash.slice(1);
 
-$('#root').html(html)
+console.log(hash)
+
+router.go('/');

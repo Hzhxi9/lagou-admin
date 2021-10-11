@@ -8,12 +8,13 @@ module.exports = {
   mode: 'development',
   /**配置入口 */
   entry: {
-    app: './src/index.js',
+    "js/app": './src/index.js',
   },
   /**配置出口 */
   output: {
     path: path.join(__dirname, './dist'),
-    filename: 'index.js',
+    filename: '[name]-[hash:6].js',
+    clean: true,
   },
   /**配置热更新 */
   devServer: {
@@ -48,6 +49,10 @@ module.exports = {
         {
           from: path.join(__dirname, './public/*.ico'),
           to: '',
+        },
+        {
+          from: path.join(__dirname, './public/libs'),
+          to: './libs',
         },
       ],
     }),

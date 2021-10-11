@@ -8,7 +8,9 @@
     "build": "npx webpack",
     "dev": "cross-env NODE_ENV=development npx webpack serve --open --hot"
   },
-  "dependencies": {},
+  "dependencies": {
+    "sme-router": "^0.12.8"
+  },
   "devDependencies": {
     "art-template": "^4.13.2",
     "art-template-loader": "^1.4.3",
