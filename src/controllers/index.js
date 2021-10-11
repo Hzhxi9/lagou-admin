@@ -11,14 +11,18 @@ const _handleSubmit = (router) => {
   };
 };
 
-const root = (req, res, next) => {
-  res.render(rootTemp);
+const root = (router) => {
+  return (req, res, next) => {
+    res.render(rootTemp);
+
+    $(window, '.wrapper').resize()
+  };
 };
 
 const login = (router) => {
   return (req, res, next) => {
     res.render(loginTemp);
-    console.log(loginTemp)
+    console.log(loginTemp);
     $('#login').on('submit', _handleSubmit(router));
   };
 };

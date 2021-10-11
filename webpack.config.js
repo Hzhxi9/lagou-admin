@@ -8,7 +8,7 @@ module.exports = {
   mode: 'development',
   /**配置入口 */
   entry: {
-    "js/app": './src/index.js',
+    'js/app': './src/index.js',
   },
   /**配置出口 */
   output: {
@@ -31,9 +31,13 @@ module.exports = {
     rules: [
       {
         test: /\.art/,
-        loader: "art-template-loader",
-      }
-    ]
+        loader: 'art-template-loader',
+      },
+      {
+        test: /\.css/,
+        use: ['style-loader', 'css-loader'],
+      },
+    ],
   },
 
   /**配置插件 */
