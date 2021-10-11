@@ -22,15 +22,22 @@ module.exports = {
     },
     compress: true,
     port: 8080,
+    open: true,
+    hot: true,
   },
   /**配置插件 */
   plugins: [
-    new HtmlWebpackPlugin(),
+    new HtmlWebpackPlugin({
+      title: '拉钩网',
+      filename: 'index.html',
+      template: path.join(__dirname, './public/index.html'),
+      inject: true
+    }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from:  'public/*.ico',
-          to: path.join(__dirname, './dist'),
+          from:  path.join(__dirname, './public/*.ico'),
+          to: '',
         },
       ],
     }),
