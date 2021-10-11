@@ -25,18 +25,28 @@ module.exports = {
     open: true,
     hot: true,
   },
+  /**配置加载器 */
+  module: {
+    rules: [
+      {
+        test: /\.art/,
+        loader: "art-template-loader",
+      }
+    ]
+  },
+
   /**配置插件 */
   plugins: [
     new HtmlWebpackPlugin({
       title: '拉钩网',
       filename: 'index.html',
       template: path.join(__dirname, './public/index.html'),
-      inject: true
+      inject: true,
     }),
     new CopyWebpackPlugin({
       patterns: [
         {
-          from:  path.join(__dirname, './public/*.ico'),
+          from: path.join(__dirname, './public/*.ico'),
           to: '',
         },
       ],
