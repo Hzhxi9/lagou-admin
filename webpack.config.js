@@ -6,6 +6,9 @@ const CopyWebpackPlugin = require('copy-webpack-plugin');
 module.exports = {
   /**配置环境 */
   mode: 'development',
+
+  devtool: 'source-map',
+  
   /**配置入口 */
   entry: {
     'js/app': './src/index.js',
@@ -25,6 +28,11 @@ module.exports = {
     port: 8080,
     open: true,
     hot: true,
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3000'
+      }
+    }
   },
   /**配置加载器 */
   module: {
