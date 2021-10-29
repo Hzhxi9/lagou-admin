@@ -26,7 +26,6 @@ const _handleSubmit = router => {
 const _login = () => {
   /**通过序列化表单值创建URL编码文本字符串 */
   const data = $('#user-form').serialize();
-
   $.ajax({
     url: '/api/user/login',
     type: 'post',
@@ -40,7 +39,6 @@ const _login = () => {
 const login = router => {
   return (req, res, next) => {
     res.render(loginTemp);
-
     /**将跳转主页的方法绑定在submit上 */
     $('#login').on('submit', _handleSubmit(router));
   };
@@ -51,25 +49,19 @@ const login = router => {
  */
 const userSave = () => {
   const $userClose = $('#user-close');
-
   /**序列化表单 */
   const data = $('#user-form').serialize();
-
-  console.log(data, 'submit');
-
   /**把添加的用户信息post到数据库 */
   $.ajax({
     url: '/api/user/login',
     type: 'post',
     data,
     success: function (res) {
-      console.log('success');
       getUserList();
       curPage = 1;
-      setPageActive(curPage)
+      setPageActive(curPage);
     },
   });
-
   $userClose.click();
 };
 
@@ -84,7 +76,6 @@ const clearInput = () => {
 let pages = 0;
 let curPage = 1;
 let userList = [];
-
 /**
  * 页码高亮事件
  * @param {number} index
@@ -101,33 +92,35 @@ const setPageActive = index => {
     .removeClass('active');
 };
 
+/**
+ * 渲染页码
+ * @param {*} count
+ */
 const paging = count => {
   const pageArray = new Array(count);
-
-  const htmlPage = usersListPageTemplate({
-    pageArray,
-  });
+  const htmlPage = usersListPageTemplate({ pageArray });
   $('#users-pages').html(htmlPage);
-
   /**页码初始化高亮 */
   setPageActive(curPage);
 };
 
+/**
+ * 渲染用户列表
+ * @param {*} data
+ */
 const showUserList = data => {
-  $('#user-list').html(
-    userListTemplate({
-      data,
-    })
-  );
+  $('#user-list').html(userListTemplate({ data }));
 };
 
+/**
+ * 获取用户列表数据
+ * @param {*} page
+ * @returns
+ */
 const getUserList = (page = 1) => {
   return $.ajax({
-    url: '/api/user/list',
-    data: {
-      size: 10,
-      page,
-    },
+    url: '/api/user',
+    data: { size: 10, page },
     success(res) {
       userList = res.data.data;
       pages = res.data.pages;
@@ -148,6 +141,27 @@ const root = router => {
     /**填充用户列表 */
     $('#content').html(usersTemplate());
 
+    /**
+     * 事件代理
+     * 点击删除用户
+     */
+    $('#user-list').on('click', '#delete-user', function (event) {
+      console.log( $(this).data('id'))
+      $.ajax({
+        url: '/api/user',
+        type: 'DELETE',
+        data: {
+          id: $(this).data('id'),
+        },
+        success: function () {
+          getUserList();
+          curPage = 1;
+          setPageActive(curPage);
+        },
+      });
+    });
+
+    /**点击页面翻页 */
     $('#users-pages').on('click', '#pages-list li:not(:first-child, :last-child)', function () {
       const index = $(this).index();
       curPage = index;
@@ -155,6 +169,7 @@ const root = router => {
       setPageActive(index);
     });
 
+    /**上一页 */
     $('#users-pages').on('click', '#pages-list li:first-child', function () {
       if (curPage > 1) {
         curPage--;
@@ -163,6 +178,7 @@ const root = router => {
       }
     });
 
+    /**下一页 */
     $('#users-pages').on('click', '#pages-list li:last-child', function () {
       if (curPage < pages) {
         curPage++;
