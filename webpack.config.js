@@ -51,8 +51,8 @@ module.exports = {
 
   /**配置压缩js、css */
   optimization: {
-    minimize: true,
-    minimizer: [/*压缩CSS**/ new OptimizeCssAssetsPlugin({}), /*压缩js **/ new TerserPlugin({})],
+    // minimize: true,
+    // minimizer: [/*压缩CSS**/ new OptimizeCssAssetsPlugin({}), /*压缩js **/ new TerserPlugin({})],
   },
 
   /**配置热更新 */

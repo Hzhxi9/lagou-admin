@@ -1,8 +1,8 @@
-import rootTemplate from '../views/index.art';
-import loginTemplate from '../views/login.art';
-import usersTemplate from '../views/users.art';
-import userListTemplate from '../views/user-list.art';
-import usersListPageTemplate from '../views/users-pages.art';
+import rootTemplate from '@/views/index.art';
+import loginTemplate from '@/views/login.art';
+import usersTemplate from '@/views/users.art';
+import userListTemplate from '@/views/user-list.art';
+import usersListPageTemplate from '@/views/users-pages.art';
 
 const rootTemp = rootTemplate({});
 const loginTemp = loginTemplate({});
