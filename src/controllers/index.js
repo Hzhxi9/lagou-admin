@@ -2,6 +2,7 @@ import rootTemplate from '../views/index.art';
 import loginTemplate from '../views/login.art';
 import usersTemplate from '../views/users.art';
 import userListTemplate from '../views/user-list.art';
+import usersListPageTemplate from '../views/users-pages.art';
 
 const rootTemp = rootTemplate({});
 const loginTemp = loginTemplate({});
@@ -11,8 +12,8 @@ const loginTemp = loginTemplate({});
  * @param {*} router
  * @returns
  */
-const _handleSubmit = (router) => {
-  return (e) => {
+const _handleSubmit = router => {
+  return e => {
     /**阻止提交表单 */
     e.preventDefault();
     router.go('/index');
@@ -30,13 +31,13 @@ const _login = () => {
     url: '/api/user/login',
     type: 'post',
     data,
-    success: function(res) {
+    success: function (res) {
       console.log('success');
     },
   });
 };
 
-const login = (router) => {
+const login = router => {
   return (req, res, next) => {
     res.render(loginTemp);
 
@@ -54,16 +55,18 @@ const userSave = () => {
   /**序列化表单 */
   const data = $('#user-form').serialize();
 
-  console.log(data, 'submit')
+  console.log(data, 'submit');
 
   /**把添加的用户信息post到数据库 */
   $.ajax({
     url: '/api/user/login',
     type: 'post',
     data,
-    success: function(res) {
-      console.log('success')
-      _list()
+    success: function (res) {
+      console.log('success');
+      getUserList();
+      curPage = 1;
+      setPageActive(curPage)
     },
   });
 
@@ -76,24 +79,66 @@ const userSave = () => {
 const clearInput = () => {
   $('#username').val('');
   $('#password').val('');
-}
+};
 
-const _list = () => {
-  $.ajax({
+let pages = 0;
+let curPage = 1;
+let userList = [];
+
+/**
+ * 页码高亮事件
+ * @param {number} index
+ */
+const setPageActive = index => {
+  /**
+   * 绑定点击事件
+   * 排除第一个和最后一个li
+   */
+  $('#pages-list li:not(:first-child, :last-child)')
+    .eq(index - 1)
+    .addClass('active')
+    .siblings()
+    .removeClass('active');
+};
+
+const paging = count => {
+  const pageArray = new Array(count);
+
+  const htmlPage = usersListPageTemplate({
+    pageArray,
+  });
+  $('#users-pages').html(htmlPage);
+
+  /**页码初始化高亮 */
+  setPageActive(curPage);
+};
+
+const showUserList = data => {
+  $('#user-list').html(
+    userListTemplate({
+      data,
+    })
+  );
+};
+
+const getUserList = (page = 1) => {
+  return $.ajax({
     url: '/api/user/list',
+    data: {
+      size: 10,
+      page,
+    },
     success(res) {
-      /**渲染list */
-      $('#user-list').html(
-        userListTemplate({
-          data: res.data.data,
-        })
-      );
+      userList = res.data.data;
+      pages = res.data.pages;
+      showUserList(res.data.data);
+      paging(res.data.pages);
     },
   });
 };
 
-const root = (router) => {
-  return (req, res, next) => {
+const root = router => {
+  return async (req, res, next) => {
     /**渲染首页 */
     res.render(rootTemp);
 
@@ -103,13 +148,37 @@ const root = (router) => {
     /**填充用户列表 */
     $('#content').html(usersTemplate());
 
+    $('#users-pages').on('click', '#pages-list li:not(:first-child, :last-child)', function () {
+      const index = $(this).index();
+      curPage = index;
+      getUserList(index);
+      setPageActive(index);
+    });
+
+    $('#users-pages').on('click', '#pages-list li:first-child', function () {
+      if (curPage > 1) {
+        curPage--;
+        getUserList(curPage);
+        setPageActive(curPage);
+      }
+    });
+
+    $('#users-pages').on('click', '#pages-list li:last-child', function () {
+      if (curPage < pages) {
+        curPage++;
+        getUserList(curPage);
+        setPageActive(curPage);
+      }
+    });
+
     /**渲染list */
-    _list();
+    getUserList();
 
     /**点击保存, 提交表单 */
     $('#user-save').on('click', userSave);
+
     /**重新点击, 清空输入框 */
-    $('#add-user').on('click', clearInput)
+    $('#add-user').on('click', clearInput);
   };
 };
 
