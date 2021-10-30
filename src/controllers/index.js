@@ -141,12 +141,18 @@ const root = router => {
     /**填充用户列表 */
     $('#content').html(usersTemplate());
 
+    /**登出事件 */
+    $('#users-signout').on('click', function (e) {
+      /**阻止a的默认事件 */
+      e.preventDefault();
+      router.go('/login')
+    });
+
     /**
      * 事件代理
      * 点击删除用户
      */
     $('#user-list').on('click', '#delete-user', function (event) {
-      console.log( $(this).data('id'))
       $.ajax({
         url: '/api/user',
         type: 'DELETE',
