@@ -18,7 +18,7 @@
       <div class="row">
         <!-- /.col -->
         <div class="col-xs-4">
-          <button type="submit" class="btn btn-primary btn-block btn-flat">登录</button>
+          <button type="submit" class="btn btn-primary btn-block btn-flat" id="login-btn">登录</button>
         </div>
         <!-- /.col -->
       </div>

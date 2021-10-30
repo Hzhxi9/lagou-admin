@@ -13,10 +13,20 @@ const loginTemp = loginTemplate({});
  * @returns
  */
 const _handleSubmit = router => {
+  
   return e => {
-    /**阻止提交表单 */
+    /**通过序列化表单值创建URL编码文本字符串 */
     e.preventDefault();
-    router.go('/index');
+  const data = $('#signin').serialize();
+    $.ajax({
+      url: '/api/login',
+      type: 'post',
+      data,
+      success: function (res) {
+         /**阻止提交表单 */
+         router.go('/index');
+      },
+    });
   };
 };
 
@@ -39,8 +49,9 @@ const _login = () => {
 const login = router => {
   return (req, res, next) => {
     res.render(loginTemp);
+    
     /**将跳转主页的方法绑定在submit上 */
-    $('#login').on('submit', _handleSubmit(router));
+    $('#signin').on('submit', _handleSubmit(router));
   };
 };
 
@@ -144,8 +155,14 @@ const root = router => {
     /**登出事件 */
     $('#users-signout').on('click', function (e) {
       /**阻止a的默认事件 */
-      e.preventDefault();
-      router.go('/login')
+      $.ajax({
+        url: '/api/logout',
+        type: 'POST',
+        success: function(){
+          e.preventDefault();
+          router.go('/login')
+        }
+      })
     });
 
     /**
