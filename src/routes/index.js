@@ -4,8 +4,27 @@ import { root, login } from '../controllers';
 
 const router = new SMERouter('root');
 
-router.route('/', root(router));
+/**路由守卫 */
+router.use(req => {
+  /**判断登录 */
+  $.ajax({
+    url: '/api/auth',
+    type: 'GET',
+    dataType: 'JSON',
+    success: function (result) {
+      if (result.state) router.go('/index');
+      else router.go('/login');
+    },
+    fail: function (error) {
+      console.log(error);
+    },
+  });
+});
+
+router.route('/', () => {})
+
+router.route('/index', root(router));
 
 router.route('/login', login(router));
 
-export default router
+export default router;

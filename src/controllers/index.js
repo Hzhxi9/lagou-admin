@@ -13,18 +13,17 @@ const loginTemp = loginTemplate({});
  * @returns
  */
 const _handleSubmit = router => {
-  
   return e => {
     /**通过序列化表单值创建URL编码文本字符串 */
     e.preventDefault();
-  const data = $('#signin').serialize();
+    const data = $('#signin').serialize();
     $.ajax({
       url: '/api/login',
       type: 'post',
       data,
       success: function (res) {
-         /**阻止提交表单 */
-         router.go('/index');
+        /**阻止提交表单 */
+        router.go('/index');
       },
     });
   };
@@ -49,7 +48,7 @@ const _login = () => {
 const login = router => {
   return (req, res, next) => {
     res.render(loginTemp);
-    
+
     /**将跳转主页的方法绑定在submit上 */
     $('#signin').on('submit', _handleSubmit(router));
   };
@@ -142,7 +141,7 @@ const getUserList = (page = 1) => {
 };
 
 const root = router => {
-  return async (req, res, next) => {
+  const loadIndex = res => {
     /**渲染首页 */
     res.render(rootTemp);
 
@@ -158,11 +157,11 @@ const root = router => {
       $.ajax({
         url: '/api/logout',
         type: 'POST',
-        success: function(){
+        success: function () {
           e.preventDefault();
-          router.go('/login')
-        }
-      })
+          router.go('/login');
+        },
+      });
     });
 
     /**
@@ -218,6 +217,21 @@ const root = router => {
 
     /**重新点击, 清空输入框 */
     $('#add-user').on('click', clearInput);
+  };
+
+  return async (req, res, next) => {
+    /**判断登录 */
+    $.ajax({
+      url: '/api/auth',
+      type: 'GET',
+      dataType: 'JSON',
+      success: function (result) {
+        loadIndex(res)
+      },
+      fail: function (error) {
+        console.log(error);
+      },
+    });
   };
 };
 
