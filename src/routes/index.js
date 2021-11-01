@@ -10,8 +10,10 @@ router.use(req => {
   $.ajax({
     url: '/api/auth',
     type: 'GET',
-    dataType: 'JSON',
+    // dataType: 'json',
     success: function (result) {
+
+      console.log(result, 'router')
       if (result.state) router.go('/index');
       else router.go('/login');
     },
@@ -21,7 +23,7 @@ router.use(req => {
   });
 });
 
-router.route('/', () => {})
+// router.route('/', () => {})
 
 router.route('/index', root(router));
 

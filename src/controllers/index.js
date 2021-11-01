@@ -23,6 +23,7 @@ const _handleSubmit = router => {
       data,
       success: function (res) {
         /**阻止提交表单 */
+        console.log(res)
         router.go('/index');
       },
     });
@@ -141,92 +142,100 @@ const getUserList = (page = 1) => {
 };
 
 const root = router => {
-  const loadIndex = res => {
-    /**渲染首页 */
-    res.render(rootTemp);
+  return (req, res, next) => {
+    
+    const loadIndex = res => {
+      /**渲染首页 */
+      res.render(rootTemp);
 
-    /**window resize, 让首页撑满整个屏幕 */
-    $(window, '.wrapper').resize();
+      /**window resize, 让首页撑满整个屏幕 */
+      $(window, '.wrapper').resize();
 
-    /**填充用户列表 */
-    $('#content').html(usersTemplate());
+      /**填充用户列表 */
+      $('#content').html(usersTemplate());
 
-    /**登出事件 */
-    $('#users-signout').on('click', function (e) {
-      /**阻止a的默认事件 */
-      $.ajax({
-        url: '/api/logout',
-        type: 'POST',
-        success: function () {
-          e.preventDefault();
-          router.go('/login');
-        },
+      /**登出事件 */
+      $('#users-signout').on('click', function (e) {
+        /**阻止a的默认事件 */
+        $.ajax({
+          url: '/api/logout',
+          type: 'POST',
+          async: false,
+          success: function () {
+            console.log('==logout')
+            e.preventDefault();
+            router.go('/login');
+          },
+        });
       });
-    });
 
-    /**
-     * 事件代理
-     * 点击删除用户
-     */
-    $('#user-list').on('click', '#delete-user', function (event) {
-      $.ajax({
-        url: '/api/user',
-        type: 'DELETE',
-        data: {
-          id: $(this).data('id'),
-        },
-        success: function () {
-          getUserList();
-          curPage = 1;
+      /**
+       * 事件代理
+       * 点击删除用户
+       */
+      $('#user-list').on('click', '#delete-user', function (event) {
+        $.ajax({
+          url: '/api/user',
+          type: 'DELETE',
+          data: {
+            id: $(this).data('id'),
+          },
+          success: function () {
+            getUserList();
+            curPage = 1;
+            setPageActive(curPage);
+          },
+        });
+      });
+
+      /**点击页面翻页 */
+      $('#users-pages').on('click', '#pages-list li:not(:first-child, :last-child)', function () {
+        const index = $(this).index();
+        curPage = index;
+        getUserList(index);
+        setPageActive(index);
+      });
+
+      /**上一页 */
+      $('#users-pages').on('click', '#pages-list li:first-child', function () {
+        if (curPage > 1) {
+          curPage--;
+          getUserList(curPage);
           setPageActive(curPage);
-        },
+        }
       });
-    });
 
-    /**点击页面翻页 */
-    $('#users-pages').on('click', '#pages-list li:not(:first-child, :last-child)', function () {
-      const index = $(this).index();
-      curPage = index;
-      getUserList(index);
-      setPageActive(index);
-    });
+      /**下一页 */
+      $('#users-pages').on('click', '#pages-list li:last-child', function () {
+        if (curPage < pages) {
+          curPage++;
+          getUserList(curPage);
+          setPageActive(curPage);
+        }
+      });
 
-    /**上一页 */
-    $('#users-pages').on('click', '#pages-list li:first-child', function () {
-      if (curPage > 1) {
-        curPage--;
-        getUserList(curPage);
-        setPageActive(curPage);
-      }
-    });
+      /**渲染list */
+      getUserList();
 
-    /**下一页 */
-    $('#users-pages').on('click', '#pages-list li:last-child', function () {
-      if (curPage < pages) {
-        curPage++;
-        getUserList(curPage);
-        setPageActive(curPage);
-      }
-    });
+      /**点击保存, 提交表单 */
+      $('#user-save').on('click', userSave);
 
-    /**渲染list */
-    getUserList();
-
-    /**点击保存, 提交表单 */
-    $('#user-save').on('click', userSave);
-
-    /**重新点击, 清空输入框 */
-    $('#add-user').on('click', clearInput);
-  };
-
-  return async (req, res, next) => {
+      /**重新点击, 清空输入框 */
+      $('#add-user').on('click', clearInput);
+    };
+    
     /**判断登录 */
     $.ajax({
       url: '/api/auth',
       type: 'GET',
-      dataType: 'JSON',
+      // dataType: 'json',
       success: function (result) {
-        loadIndex(res)
+        /**
+         * 这里解析不了json
+         */
+        console.log('====',result)
+        if(result.state) loadIndex(res);
+        else router.go('/login')
       },
       fail: function (error) {
         console.log(error);
