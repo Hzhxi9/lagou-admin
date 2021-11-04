@@ -1,6 +1,7 @@
 import SMERouter from 'sme-router';
 
-import { root, login } from '../controllers';
+import root from '../controllers';
+import login from '../controllers/login';
 
 const router = new SMERouter('root');
 
@@ -22,8 +23,6 @@ router.use(req => {
     },
   });
 });
-
-// router.route('/', () => {})
 
 router.route('/index', root(router));
 

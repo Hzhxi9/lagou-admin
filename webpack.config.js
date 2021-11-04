@@ -74,11 +74,11 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.art/,
+        test: /\.art$/,
         loader: 'art-template-loader',
       },
       {
-        test: /\.css/,
+        test: /\.css$/,
         use: [MiniCssExtractPlugin.loader, 'cache-loader', 'css-loader'],
       },
       {
