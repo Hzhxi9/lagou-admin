@@ -39,6 +39,7 @@ const _handleLogout = router => {
 };
 
 export const auth = (router, cb) => {
+  console.log('===auth===')
   /**判断登录 */
   $.ajax({
     url: '/api/auth',

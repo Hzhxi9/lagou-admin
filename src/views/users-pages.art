@@ -1,7 +1,7 @@
 <ul class="pagination pagination-sm no-margin pull-right" id="pages-list">
-    <li><a href="#">&laquo;</a></li>
+    <li><a href="#" id="prev">&laquo;</a></li>
     {{each pageArray}}
         <li><a href='#'>{{ $index + 1 }}</a></li>
     {{/each}}
-    <li><a href="#">&raquo;</a></li>
+    <li><a href="#" id="next">&raquo;</a></li>
 </ul>

@@ -1,4 +1,3 @@
-
 import userListTemplate from '@/views/user-list.art';
 
 import Page from '../data/Page';
@@ -9,18 +8,19 @@ import paging, { setPageActive } from './page';
  * @param {*} page
  * @returns
  */
-export const getUserList = (index) => {
-  return $.ajax({
+export const getUserList = (index = 1) => {
+  console.log(index, '==index===')
+  $.ajax({
     url: '/api/user',
     data: { size: Page.pageSize, page: index },
     success(res) {
       const { pages, data } = res.data;
-      /**设置总页码 */
-      Page.setPages(pages);
+     
+      /**处理分页 */
+      paging(pages, index);
+
       /**渲染列表 */
       showUserList(data);
-      /**处理分页 */
-      paging(pages);
     },
   });
 };

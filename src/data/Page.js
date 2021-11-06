@@ -5,7 +5,6 @@ class Page {
     this.pages = 0; // 总页数
   }
   setCurPage(page) {
-    console.log(page, '==page==');
     this.curPage = page;
   }
   setPages(page) {
