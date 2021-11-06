@@ -1,6 +1,6 @@
 import userListTemplate from '@/views/user-list.art';
 
-import Page from '../data/Page';
+import Page from '../utils/Page';
 import paging, { setPageActive } from './page';
 
 /**
@@ -9,7 +9,6 @@ import paging, { setPageActive } from './page';
  * @returns
  */
 export const getUserList = (index = 1) => {
-  console.log(index, '==index===')
   $.ajax({
     url: '/api/user',
     data: { size: Page.pageSize, page: index },

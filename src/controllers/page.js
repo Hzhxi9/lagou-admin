@@ -1,6 +1,6 @@
 import usersListPageTemplate from '@/views/users-pages.art';
 
-import Page from '../data/Page';
+import Page from '../utils/Page';
 import emitter from '../utils';
 
 /**
