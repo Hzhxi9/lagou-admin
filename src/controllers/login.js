@@ -25,6 +25,37 @@ const _handleSubmit = router => {
   };
 };
 
+const _handleLogout = router => {
+  return e => {
+    $.ajax({
+      url: '/api/logout',
+      type: 'POST',
+      success: function () {
+        e.preventDefault();
+        router.go('/login');
+      },
+    });
+  };
+};
+
+export const auth = (router, cb) => {
+  /**判断登录 */
+  $.ajax({
+    url: '/api/auth',
+    type: 'GET',
+    // dataType: 'json',
+    success: function (result) {
+      /**这里解析不了json */
+      console.log('====', result);
+      if (result.state) cb();
+      else router.go('/login');
+    },
+    fail: function (error) {
+      console.log(error);
+    },
+  });
+};
+
 const login = router => {
   return (req, res, next) => {
     res.render(loginTemp);
@@ -34,4 +65,10 @@ const login = router => {
   };
 };
 
-export default login
+export const logout = router => {
+  return (req, res, next) => {
+    $('#users-signout').on('click', _handleLogout(router));
+  };
+};
+
+export default login;
